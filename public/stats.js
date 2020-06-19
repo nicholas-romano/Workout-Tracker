@@ -2,9 +2,11 @@
 
 fetch("/api/workouts/range")
   .then(response => {
+    console.log("response: ", response);
     return response.json();
   })
   .then(data => {
+    console.log("Chart data: ", data);
     populateChart(data);
   });
 
@@ -34,9 +36,11 @@ API.getWorkoutsInRange()
   return arr;
   }
 function populateChart(data) {
-  let durations = duration(data);
-  let pounds = calculateTotalWeight(data);
-  let workouts = workoutNames(data);
+
+  let durations = getTotals(data, 'duration');
+  let pounds = getTotals(data, 'weight');
+  let workouts = getTotals(data, 'name');
+
   const colors = generatePalette();
 
   let line = document.querySelector("#canvas").getContext("2d");
@@ -186,38 +190,15 @@ function populateChart(data) {
   });
 }
 
-function duration(data) {
-  let durations = [];
-
-  data.forEach(workout => {
-    workout.exercises.forEach(exercise => {
-      durations.push(exercise.duration);
-    });
-  });
-
-  return durations;
-}
-
-function calculateTotalWeight(data) {
-  let total = [];
-
-  data.forEach(workout => {
-    workout.exercises.forEach(exercise => {
-      total.push(exercise.weight);
-    });
-  });
-
-  return total;
-}
-
-function workoutNames(data) {
+const getTotals = (data, type) => {
   let workouts = [];
 
   data.forEach(workout => {
     workout.exercises.forEach(exercise => {
-      workouts.push(exercise.name);
+      workouts.push(exercise[type]);
     });
   });
-  
+
   return workouts;
-}
+
+} 

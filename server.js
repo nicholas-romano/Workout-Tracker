@@ -19,7 +19,7 @@ app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { useNewUrlParser: true });
 
-app.get("/api/workouts", (req, res) => {
+app.get("/api/workouts(/range)?", (req, res) => {
     db.Workout.find({})
     .then((workouts) => {
         return res.json(workouts);
@@ -110,7 +110,7 @@ app.delete("/api/delete/:id", (req, res) => {
     });  
 });
 
-app.post("/api/workouts", function(req, res) {
+app.post("/api/workouts", (req, res) => {
     db.Workout.create({
         day: Date.now()
     })
@@ -122,8 +122,12 @@ app.post("/api/workouts", function(req, res) {
     });
 });
 
-app.get('/exercise?', function(req, res) {
+app.get('/exercise?', (req, res) => {
     res.sendFile(path.join(__dirname + "/public/exercise.html"));
+});
+
+app.get('/stats', (req, res) => {
+    res.sendFile(path.join(__dirname + "/public/stats.html"));
 });
 
 app.listen(PORT, () => {
