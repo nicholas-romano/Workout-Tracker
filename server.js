@@ -96,6 +96,20 @@ app.put("/api/workouts/:id", (req, res) => {
     }
 });
 
+app.delete("/api/delete/:id", (req, res) => {
+    const { id } = req.params;
+    db.Workout.remove(
+        {
+            _id: mongojs.ObjectID(id)
+        }
+    ).then(workout => {
+        res.json(workout);
+    })
+    .catch(err => {
+        res.json(err);
+    });  
+});
+
 app.post("/api/workouts", function(req, res) {
     db.Workout.create({
         day: Date.now()

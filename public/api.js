@@ -24,15 +24,38 @@ const API = {
     return json;
   },
   async createWorkout(data = {}) {
-    const res = await fetch("/api/workouts", {
+    const lastWorkout = await this.getLastWorkout();
+    const exercisesAmt = lastWorkout.exercises.length;
+
+    //If the last workout is empty, delete it before adding another
+    if (exercisesAmt === 0) {
+      const id = lastWorkout._id;
+      const workout = await this.deleteWorkout(id);
+    }
+
+    //Create a new workout:
+    const createRes = await fetch("/api/workouts", {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" }
     });
 
+    const json = await createRes.json();
+
+    return json;
+
+  },
+
+  async deleteWorkout(id) {
+
+    const res = await fetch("/api/delete/" + id, {
+      method: "DELETE"
+    });
+
     const json = await res.json();
 
     return json;
+
   },
 
   async getWorkoutsInRange() {
@@ -40,5 +63,5 @@ const API = {
     const json = await res.json();
 
     return json;
-  },
+  }
 };
