@@ -96,6 +96,18 @@ app.put("/api/workouts/:id", (req, res) => {
     }
 });
 
+app.post("/api/workouts", function(req, res) {
+    db.Workout.create({
+        day: Date.now()
+    })
+    .then(workout => {
+        res.json(workout);
+    })
+    .catch(err => {
+        res.json(err);
+    });
+});
+
 app.get('/exercise?', function(req, res) {
     res.sendFile(path.join(__dirname + "/public/exercise.html"));
 });
