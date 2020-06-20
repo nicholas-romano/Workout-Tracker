@@ -87,7 +87,7 @@ function populateChart(data, chartTotals) {
       responsive: true,
       title: {
         display: true,
-        text: "Total Workout Duration"
+        text: "Total Workout Duration each day"
       },
       scales: {
         xAxes: [
@@ -156,7 +156,7 @@ function populateChart(data, chartTotals) {
     options: {
       title: {
         display: true,
-        text: "Total Workout Pounds Lifted"
+        text: "Total Workout Pounds Lifted each day"
       },
       scales: {
         yAxes: [
