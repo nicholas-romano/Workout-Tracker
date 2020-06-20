@@ -185,7 +185,7 @@ function populateChart(data, chartTotals) {
     options: {
       title: {
         display: true,
-        text: "All Excercises Total Duration"
+        text: "All Excercises Total Duration in minutes"
       }
     }
   });
