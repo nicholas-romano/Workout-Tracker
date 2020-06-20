@@ -54,7 +54,9 @@ function populateChart(data, chartTotals) {
   let durations = getExcerciseInfo(data, 'duration');
   console.log("durations: ", durations);
 
-  let pounds = getExcerciseInfo(data, 'weight');
+  resistance_workouts = getResistanceWorkouts(data);
+
+  let pounds = getResistanceWeight(data);
   console.log("pounds: ", pounds);
 
   let workouts = getExcerciseInfo(data, 'name');
@@ -85,7 +87,7 @@ function populateChart(data, chartTotals) {
       responsive: true,
       title: {
         display: true,
-        text: "Total Duration"
+        text: "Total Workout Duration"
       },
       scales: {
         xAxes: [
@@ -125,9 +127,21 @@ function populateChart(data, chartTotals) {
             "rgba(255, 206, 86, 0.2)",
             "rgba(75, 192, 192, 0.2)",
             "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 159, 64, 0.2)",
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
             "rgba(255, 159, 64, 0.2)"
           ],
           borderColor: [
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)",
+            "rgba(255, 159, 64, 1)",
             "rgba(255, 99, 132, 1)",
             "rgba(54, 162, 235, 1)",
             "rgba(255, 206, 86, 1)",
@@ -142,7 +156,7 @@ function populateChart(data, chartTotals) {
     options: {
       title: {
         display: true,
-        text: "Total Pounds Lifted"
+        text: "Total Workout Pounds Lifted"
       },
       scales: {
         yAxes: [
@@ -162,7 +176,7 @@ function populateChart(data, chartTotals) {
       labels: workouts,
       datasets: [
         {
-          label: "Excercises Performed",
+          label: "All Excercises Total Duration",
           backgroundColor: colors,
           data: durations
         }
@@ -171,7 +185,7 @@ function populateChart(data, chartTotals) {
     options: {
       title: {
         display: true,
-        text: "Excercises Performed"
+        text: "All Excercises Total Duration"
       }
     }
   });
@@ -179,10 +193,10 @@ function populateChart(data, chartTotals) {
   let donutChart = new Chart(pie2, {
     type: "doughnut",
     data: {
-      labels: workouts,
+      labels: resistance_workouts,
       datasets: [
         {
-          label: "Excercises Performed",
+          label: "Resistance Exercises Total Pounds",
           backgroundColor: colors,
           data: pounds
         }
@@ -191,7 +205,7 @@ function populateChart(data, chartTotals) {
     options: {
       title: {
         display: true,
-        text: "Excercises Performed"
+        text: "Resistance Exercises Total Pounds"
       }
     }
   });
@@ -265,16 +279,46 @@ const formatDate = date => {
 };
 
 const getExcerciseInfo = (data, type) => {
-  let workouts = [];
+  let info = [];
 
   data.forEach(workout => {
     workout.exercises.forEach(exercise => {
       if (exercise[type] !== undefined) {
-        workouts.push(exercise[type]);
+        info.push(exercise[type]);
       }
     });
   });
 
-  return workouts;
+  return info;
 
 } 
+
+const getResistanceWorkouts = data => {
+
+  let resistance_workouts = [];
+
+  data.forEach(workout => {
+    workout.exercises.forEach(exercise => {
+      if (exercise.type === "resistance") {
+        resistance_workouts.push(exercise.name);
+      }
+    });
+  });
+
+  return resistance_workouts;
+
+}
+
+const getResistanceWeight = data => {
+  let resistance_weight = [];
+
+  data.forEach(workout => {
+    workout.exercises.forEach(exercise => {
+      if (exercise.type === "resistance") {
+        resistance_weight.push(exercise.weight);
+      }
+    });
+  });
+
+  return resistance_weight;
+}
