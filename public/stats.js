@@ -176,7 +176,7 @@ function populateChart(data, chartTotals) {
       labels: workouts,
       datasets: [
         {
-          label: "All Excercises Total Duration",
+          label: "All Excercises Total Duration in minutes",
           backgroundColor: colors,
           data: durations
         }
