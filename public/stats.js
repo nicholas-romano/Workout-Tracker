@@ -2,12 +2,11 @@
 
 fetch("/api/workouts/range")
   .then(response => {
-    console.log("response: ", response);
     return response.json();
   })
   .then(data => {
-    console.log("Chart data: ", data);
-    populateChart(data);
+    const chartTotals = getChartTotalData(data);
+    populateChart(data, chartTotals);
   });
 
 
@@ -30,16 +29,36 @@ API.getWorkoutsInRange()
     "#d45087",
     "#f95d6a",
     "#ff7c43",
+    "ffa600",
+    "#003f5c",
+    "#2f4b7c",
+    "#665191",
+    "#a05195",
+    "#d45087",
+    "#f95d6a",
+    "#ff7c43",
     "ffa600"
   ]
 
   return arr;
   }
-function populateChart(data) {
+function populateChart(data, chartTotals) {
+  const days = chartTotals[0];
+  const totalDuration = chartTotals[1];
+  const totalPounds = chartTotals[2];
 
-  let durations = getTotals(data, 'duration');
-  let pounds = getTotals(data, 'weight');
-  let workouts = getTotals(data, 'name');
+  console.log("days: ", days);
+  console.log("totalDuration: ", totalDuration);
+  console.log("totalPounds: ", totalPounds);
+
+  let durations = getExcerciseInfo(data, 'duration');
+  console.log("durations: ", durations);
+
+  let pounds = getExcerciseInfo(data, 'weight');
+  console.log("pounds: ", pounds);
+
+  let workouts = getExcerciseInfo(data, 'name');
+  console.log("workouts: ", workouts);
 
   const colors = generatePalette();
 
@@ -51,21 +70,13 @@ function populateChart(data) {
   let lineChart = new Chart(line, {
     type: "line",
     data: {
-      labels: [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday"
-      ],
+      labels: days,
       datasets: [
         {
           label: "Workout Duration In Minutes",
           backgroundColor: "red",
           borderColor: "red",
-          data: durations,
+          data: totalDuration,
           fill: false
         }
       ]
@@ -73,14 +84,15 @@ function populateChart(data) {
     options: {
       responsive: true,
       title: {
-        display: true
+        display: true,
+        text: "Total Duration"
       },
       scales: {
         xAxes: [
           {
             display: true,
             scaleLabel: {
-              display: true
+              display: true,
             }
           }
         ],
@@ -89,6 +101,9 @@ function populateChart(data) {
             display: true,
             scaleLabel: {
               display: true
+            },
+            ticks: {
+              beginAtZero: true
             }
           }
         ]
@@ -99,19 +114,11 @@ function populateChart(data) {
   let barChart = new Chart(bar, {
     type: "bar",
     data: {
-      labels: [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ],
+      labels: days,
       datasets: [
         {
           label: "Pounds",
-          data: pounds,
+          data: totalPounds,
           backgroundColor: [
             "rgba(255, 99, 132, 0.2)",
             "rgba(54, 162, 235, 0.2)",
@@ -135,7 +142,7 @@ function populateChart(data) {
     options: {
       title: {
         display: true,
-        text: "Pounds Lifted"
+        text: "Total Pounds Lifted"
       },
       scales: {
         yAxes: [
@@ -190,12 +197,81 @@ function populateChart(data) {
   });
 }
 
-const getTotals = (data, type) => {
+const getChartTotalData = data => {
+  console.log("data: ", data);
+  let days = [];
+  let totalDuration = [];
+  let totalPounds = [];
+
+  if (data) {
+
+    const firstDayTimestamp = data[0].day;
+
+    let currentDay = formatDate(firstDayTimestamp);
+
+    let dayCount = 1;
+
+    days.push(dayCount);
+
+    let totalDurationAmt = 0;
+    let totalPoundsAmt = 0;
+
+    data.forEach(workout => {
+
+      const timestamp = workout.day;
+  
+      const formattedDate = formatDate(timestamp);
+  
+      if (formattedDate !== currentDay) {
+
+        dayCount += 1;
+        days.push(dayCount);
+        totalDuration.push(totalDurationAmt);
+        totalPounds.push(totalPoundsAmt);
+
+        totalDurationAmt = 0;
+        totalPoundsAmt = 0;
+
+        totalDurationAmt += workout.totalDuration;
+        totalPoundsAmt += workout.totalPounds;
+
+        currentDay = formattedDate;
+
+      } else {
+
+        totalDurationAmt += workout.totalDuration;
+        totalPoundsAmt += workout.totalPounds;
+
+      }
+  
+    });
+
+    totalDuration.push(totalDurationAmt);
+    totalPounds.push(totalPoundsAmt);
+
+    return [days, totalDuration, totalPounds];
+
+  }
+}
+
+const formatDate = date => {
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  };
+  return new Date(date).toLocaleDateString(options);
+};
+
+const getExcerciseInfo = (data, type) => {
   let workouts = [];
 
   data.forEach(workout => {
     workout.exercises.forEach(exercise => {
-      workouts.push(exercise[type]);
+      if (exercise[type] !== undefined) {
+        workouts.push(exercise[type]);
+      }
     });
   });
 

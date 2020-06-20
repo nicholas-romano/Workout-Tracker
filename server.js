@@ -57,7 +57,8 @@ app.put("/api/workouts/:id", (req, res) => {
                             type,
                             name,
                             duration,
-                            distance
+                            distance,
+                            weight: 0
                         }]
                     }
                 }
@@ -120,7 +121,7 @@ app.post("/api/workouts", (req, res) => {
     .catch(err => {
         res.json(err);
     });
-});
+});  
 
 app.get('/exercise?', (req, res) => {
     res.sendFile(path.join(__dirname + "/public/exercise.html"));

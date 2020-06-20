@@ -25,12 +25,17 @@ const API = {
   },
   async createWorkout(data = {}) {
     const lastWorkout = await this.getLastWorkout();
-    const exercisesAmt = lastWorkout.exercises.length;
 
-    //If the last workout is empty, delete it before adding another
-    if (exercisesAmt === 0) {
-      const id = lastWorkout._id;
-      const workout = await this.deleteWorkout(id);
+    if (lastWorkout) {
+
+      const exercisesAmt = lastWorkout.exercises.length;
+
+      //If the last workout is empty, delete it before adding another
+      if (exercisesAmt === 0) {
+        const id = lastWorkout._id;
+        const workout = await this.deleteWorkout(id);
+      }
+
     }
 
     //Create a new workout:
@@ -61,7 +66,6 @@ const API = {
   async getWorkoutsInRange() {
     const res = await fetch("/api/workouts/range");
     const json = await res.json();
-    console.log("getWorkoutsInRange json: ", json)
     return json;
   }
 };

@@ -57,18 +57,35 @@ function renderWorkoutSummary(summary) {
     totalDistance: "Total Distance Covered"
   };
 
+  const workoutUnitsKeyMap = {
+    0: "",
+    1: "minutes",
+    2: "",
+    3: "pounds",
+    4: "",
+    5: "",
+    6: "miles"
+  }
+
+  let index = 0;
+
   Object.keys(summary).forEach(key => {
     const p = document.createElement("p");
     const strong = document.createElement("strong");
 
     strong.textContent = workoutKeyMap[key];
-    const textNode = document.createTextNode(`: ${summary[key]}`);
+    const textNode = document.createTextNode(`: ${summary[key]} ${workoutUnitsKeyMap[index]}`);
 
     p.appendChild(strong);
     p.appendChild(textNode);
 
     container.appendChild(p);
+
+    index += 1;
+    
   });
+
+
 }
 
 function renderNoWorkoutText() {

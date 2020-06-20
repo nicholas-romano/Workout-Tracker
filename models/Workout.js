@@ -33,6 +33,13 @@ WorkOutSchema.virtual("totalDuration").get(function () {
     }, 0);
 });
 
+WorkOutSchema.virtual("totalPounds").get(function () {
+    // "reduce" array of exercises down to just the sum of their durations
+    return this.exercises.reduce((total, exercise) => {
+      return total + exercise.weight;
+    }, 0);
+});
+
 const Workout = mongoose.model("Workout", WorkOutSchema);
 
 module.exports = Workout;

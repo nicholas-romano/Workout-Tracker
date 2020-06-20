@@ -18,8 +18,6 @@ async function init() {
     }
 
   } else {
-    //There are no workouts in the database, remove the id from the url if it exists:
-    location.replace('/');
     //Remove continue button:
     document.querySelector("#continue-btn").classList.add("d-none");
   }
