@@ -161,6 +161,7 @@ button {
 #clear-all-workouts {
   margin: 0 auto;
   width: 150px;
+  display: none;
 }
 
 .btn.btn-primary.clear-data {
