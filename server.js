@@ -111,6 +111,16 @@ app.delete("/api/delete/:id", (req, res) => {
     });  
 });
 
+app.delete("/api/deleteAll", (req, res) => {
+    db.Workout.remove({})
+    .then(workout => {
+        res.json(workout);
+    })
+    .catch(err => {
+        res.json(err);
+    });  
+})
+
 app.post("/api/workouts", (req, res) => {
     db.Workout.create({
         day: Date.now()

@@ -1,12 +1,18 @@
 // get all workout data from back-end
-
 fetch("/api/workouts/range")
   .then(response => {
     return response.json();
   })
   .then(data => {
-    const chartTotals = getChartTotalData(data);
-    populateChart(data, chartTotals);
+    if (data.length > 0) {
+      $('#clear-all-workouts').show();
+      $('#no-data-message').remove();
+      const chartTotals = getChartTotalData(data);
+      populateChart(data, chartTotals);
+    } else {
+      $('#clear-all-workouts').hide();
+      $('h1').after('<p id="no-data-message">You have not yet added any workouts.</p>')
+    }
   });
 
 
@@ -54,9 +60,9 @@ function populateChart(data, chartTotals) {
   let durations = getExcerciseInfo(data, 'duration');
   console.log("durations: ", durations);
 
-  resistance_workouts = getResistanceWorkouts(data);
+  resistance_workouts = getResistanceWorkoutsInfo(data, 'name');
 
-  let pounds = getResistanceWeight(data);
+  let pounds = getResistanceWorkoutsInfo(data, 'weight');
   console.log("pounds: ", pounds);
 
   let workouts = getExcerciseInfo(data, 'name');
@@ -217,7 +223,7 @@ const getChartTotalData = data => {
   let totalDuration = [];
   let totalPounds = [];
 
-  if (data) {
+    $('#clear-all-workouts').show();
 
     const firstDayTimestamp = data[0].day;
 
@@ -265,7 +271,7 @@ const getChartTotalData = data => {
 
     return [days, totalDuration, totalPounds];
 
-  }
+  
 }
 
 const formatDate = date => {
@@ -277,6 +283,15 @@ const formatDate = date => {
   };
   return new Date(date).toLocaleDateString(options);
 };
+
+const clearData = () => {
+  const clearData = confirm("Are you sure you want to delete all workouts?");
+  if (clearData) {
+    $('#clear-all-workouts').hide();
+    API.deleteAllWorkouts();
+    location.reload();
+  }
+}
 
 const getExcerciseInfo = (data, type) => {
   let info = [];
@@ -293,32 +308,18 @@ const getExcerciseInfo = (data, type) => {
 
 } 
 
-const getResistanceWorkouts = data => {
+const getResistanceWorkoutsInfo = (data, type) => {
 
   let resistance_workouts = [];
 
   data.forEach(workout => {
     workout.exercises.forEach(exercise => {
       if (exercise.type === "resistance") {
-        resistance_workouts.push(exercise.name);
+        resistance_workouts.push(exercise[type]);
       }
     });
   });
 
   return resistance_workouts;
 
-}
-
-const getResistanceWeight = data => {
-  let resistance_weight = [];
-
-  data.forEach(workout => {
-    workout.exercises.forEach(exercise => {
-      if (exercise.type === "resistance") {
-        resistance_weight.push(exercise.weight);
-      }
-    });
-  });
-
-  return resistance_weight;
 }
