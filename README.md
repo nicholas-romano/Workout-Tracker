@@ -5,7 +5,7 @@
 ![Workout-Tracker](/images/Workout-Tracker.png) 
 
 ## Description 
-Workout Tracker provides an interface for active people to enter and track their workouts from day to day and view their progress over time. 
+Workout Tracker provides an interface for active people to enter and track workouts from day to day and view their progress over time. 
 
 ## Table of Contents 
 * [Installation](#installation) 
