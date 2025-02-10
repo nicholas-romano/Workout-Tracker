@@ -1,7 +1,5 @@
 # Workout-Tracker &middot; ![node](https://img.shields.io/badge/node-12.16.2-blue) ![express](https://img.shields.io/badge/express-4.16.3-blue) ![mongojs](https://img.shields.io/badge/mongojs-3.1.0-blue) ![mongoose](https://img.shields.io/badge/mongoose-5.3.16-blue) ![morgan](https://img.shields.io/badge/morgan-1.9.1-blue) ![path](https://img.shields.io/badge/path-0.12.7-blue) 
 
-[https://myworkout-tracker.herokuapp.com/](https://myworkout-tracker.herokuapp.com/)
-
 ![Workout-Tracker](/images/Workout-Tracker.png) 
 
 ## Description 
